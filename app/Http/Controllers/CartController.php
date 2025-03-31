@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Cart\StoreRequest;
 use App\Http\Requests\Cart\UpdateRequest;
 use App\Models\Cart;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -28,7 +29,21 @@ class CartController extends Controller
     {
         $validatedRequest = $request->validated();
 
-        Cart::create($validatedRequest);
+        $cart = Cart::whereUserId($validatedRequest['user_id'])
+            ->whereProductId($validatedRequest['product_id'])
+            ->first();
+
+        if ($cart) {
+            $cart->update([
+                'quantity' => $cart->quantity + $validatedRequest['quantity'],
+            ]);
+        } else {
+            $cart = Cart::create($validatedRequest);
+        }
+
+        $cart->product->update([
+            'stock' => $cart->product->stock - $validatedRequest['quantity'],
+        ]);
 
         return response()->noContent();
     }
