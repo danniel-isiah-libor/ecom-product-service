@@ -24,7 +24,7 @@ class TokenMiddleware
 
         $response = $http->request(
             'POST',
-            'http://localhost:8000/api/auth/token',
+            env('AUTH_URL') . '/api/auth/token',
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
