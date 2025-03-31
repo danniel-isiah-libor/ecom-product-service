@@ -41,9 +41,9 @@ class CartController extends Controller
             $cart = Cart::create($validatedRequest);
         }
 
-        $cart->product->update([
-            'stock' => $cart->product->stock - $validatedRequest['quantity'],
-        ]);
+        // $cart->product->update([
+        //     'stock' => $cart->product->stock - $validatedRequest['quantity'],
+        // ]);
 
         return response()->noContent();
     }
